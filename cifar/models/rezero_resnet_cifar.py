@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 
 
-__all__ = ['ResNet','rezero_resnet20', 'rezero_resnet32', 'rezero_resnet44', 'rezero_resnet56', 'rezero_resnet110',  'rezero_resnet602', 'rezero_resnet1202']
+__all__ = ['ResNet','rezero_resnet20', 'rezero_resnet32', 'rezero_resnet44', 'rezero_resnet56','nobn_rezero_resnet56', 'rezero_resnet110',  'rezero_resnet602', 'rezero_resnet1202']
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -35,6 +35,38 @@ class ReZeroBasicBlock(nn.Module):
 
         out = self.conv2(out)
         out = self.bn2(out)
+
+        if self.downsample is not None:
+            identity = self.downsample(x)
+            identity = torch.cat((identity, torch.zeros_like(identity)), 1)
+
+        out = self.resweight * self.relu(out) + identity
+
+        return out
+    
+class nobn_ReZeroBasicBlock(nn.Module):
+    expansion = 1
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None):
+        super(nobn_ReZeroBasicBlock, self).__init__()
+        # Both self.conv1 and self.downsample layers downsample the input when stride != 1
+        self.conv1 = conv3x3(inplanes, planes, stride)
+        #self.bn1 = nn.BatchNorm2d(planes)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = conv3x3(planes, planes)
+        #self.bn2 = nn.BatchNorm2d(planes)
+        self.downsample = downsample
+        self.resweight = nn.Parameter(torch.zeros(1),requires_grad = True)
+
+    def forward(self, x):
+        identity = x
+
+        out = self.conv1(x)
+        #out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        #out = self.bn2(out)
 
         if self.downsample is not None:
             identity = self.downsample(x)
@@ -133,6 +165,14 @@ def rezero_resnet56(**kwargs):
     """
     model = ResNet(ReZeroBasicBlock, [9, 9, 9], **kwargs)
     return model
+
+def nobn_rezero_resnet56(**kwargs):
+    """Constructs a ResNet-56 model.
+
+    """
+    model = ResNet(nobn_ReZeroBasicBlock, [9, 9, 9], **kwargs)
+    return model
+
 
 
 def rezero_resnet110(**kwargs):
