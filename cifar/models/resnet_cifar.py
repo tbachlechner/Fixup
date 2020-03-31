@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 
 
-__all__ = ['ResNet', 'resnet20', 'resnet32', 'resnet44', 'resnet56', 'resnet110', 'resnet1202']
+__all__ = ['ResNet', 'resnet20', 'resnet32', 'resnet44', 'resnet56', 'resnet110','resnet602', 'resnet1202']
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -145,6 +145,12 @@ def resnet110(**kwargs):
     model = ResNet(BasicBlock, [18, 18, 18], **kwargs)
     return model
 
+def resnet602(**kwargs):
+    """Constructs a ResNet-1202 model.
+
+    """
+    model = ResNet(BasicBlock, [100, 100, 100], **kwargs)
+    return model    
 
 def resnet1202(**kwargs):
     """Constructs a ResNet-1202 model.
