@@ -38,6 +38,8 @@ parser.add_argument('--decay', default=1e-4, type=float, help='weight decay (def
 parser.add_argument('--batchsize', default=128, type=int, help='batch size per GPU (default=128)')
 parser.add_argument('--n_epoch', default=200, type=int, help='total number of epochs')
 parser.add_argument('--base_lr', default=0.1, type=float, help='base learning rate (default=0.1)')
+parser.add_argument('--lr_step1', default=100, type=int, help='first lr step')
+parser.add_argument('--lr_step2', default=150, type=int, help='second lr step')
 
 args = parser.parse_args()
 
@@ -195,14 +197,14 @@ def checkpoint(acc, epoch):
     torch.save(state, './checkpoint/' + args.arch + '_' + args.sess + '_' + str(args.seed) + '.ckpt')
 
 def adjust_learning_rate(optimizer, epoch):
-    """decrease the learning rate at 100 and 150 epoch"""
+    """decrease the learning rate at args.lr_step1 and args.lr_step2 epoch"""
     lr = base_learning_rate
     if epoch <= 9 and lr > 0.1:
         # warm-up training for large minibatch
         lr = 0.1 + (base_learning_rate - 0.1) * epoch / 10.
-    if epoch >= 100:
+    if epoch >= args.lr_step1:
         lr /= 10
-    if epoch >= 150:
+    if epoch >= args.lr_step2:
         lr /= 10
     for param_group in optimizer.param_groups:
         if param_group['initial_lr'] == base_learning_rate:
@@ -210,9 +212,9 @@ def adjust_learning_rate(optimizer, epoch):
         else:
             if epoch <= 9:
                 param_group['lr'] = param_group['initial_lr'] * lr / base_learning_rate
-            elif epoch < 100:
+            elif epoch < args.lr_step1:
                 param_group['lr'] = param_group['initial_lr']
-            elif epoch < 150:
+            elif epoch < args.lr_step1:
                 param_group['lr'] = param_group['initial_lr'] / 10.
             else:
                 param_group['lr'] = param_group['initial_lr'] / 100.
