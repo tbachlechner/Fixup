@@ -26,6 +26,8 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
+
+
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', choices=model_names, help='model architecture: ' +
                         ' | '.join(model_names) + ' (default: fixup_resnet110)')
@@ -116,11 +118,11 @@ parameters_bias = [p[1] for p in net.named_parameters() if 'bias' in p[0]]
 parameters_scale = [p[1] for p in net.named_parameters() if 'scale' in p[0]]
 parameters_others = [p[1] for p in net.named_parameters() if not ('bias' in p[0] or 'scale' in p[0])]
 optimizer = optim.SGD(
-        [{'params': parameters_bias, 'lr': args.base_lr/10.}, 
-        {'params': parameters_scale, 'lr': args.base_lr/10.}, 
-        {'params': parameters_others}], 
-        lr=base_learning_rate, 
-        momentum=0.9, 
+        [{'params': parameters_bias, 'lr': args.base_lr/10.},
+        {'params': parameters_scale, 'lr': args.base_lr/10.},
+        {'params': parameters_others}],
+        lr=base_learning_rate,
+        momentum=0.9,
         weight_decay=args.decay)
 
 # Training
