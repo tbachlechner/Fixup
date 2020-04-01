@@ -17,7 +17,8 @@ import csv
 
 import models
 
-from utils import progress_bar, mixup_data, mixup_criterion
+#from utils import progress_bar, mixup_data, mixup_criterion
+from utils import mixup_data, mixup_criterion
 
 import numpy
 import random
@@ -42,8 +43,13 @@ parser.add_argument('--n_epoch', default=200, type=int, help='total number of ep
 parser.add_argument('--base_lr', default=0.1, type=float, help='base learning rate (default=0.1)')
 parser.add_argument('--lr_step1', default=100, type=int, help='first lr step')
 parser.add_argument('--lr_step2', default=150, type=int, help='second lr step')
+parser.add_argument('--progress_bar', default='True', type=str, help='display progress bar')
 
 args = parser.parse_args()
+args.progress_bar = (args.progress_bar=='True')
+
+if args.progress_bar:
+    from utils import progress_bar
 
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
@@ -64,16 +70,18 @@ if use_cuda:
 
 # Data
 print('==> Preparing data..')
+normalize = transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    normalize,
 ])
 
 transform_test = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    normalize,
 ])
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
@@ -150,9 +158,10 @@ def train(epoch):
         total += targets.size(0)
         correct += (lam * predicted.eq(targets_a.data).float()).cpu().sum() + ((1 - lam) * predicted.eq(targets_b.data).float()).cpu().sum()
         acc = 100.*float(correct)/float(total)
-
-        progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (train_loss/(batch_idx+1), acc, correct, total))
+        
+        if args.progress_bar:
+            progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+                % (train_loss/(batch_idx+1), acc, correct, total))
 
     return (train_loss/batch_idx, acc)
 
@@ -173,9 +182,9 @@ def test(epoch):
             _, predicted = torch.max(outputs.data, 1)
             total += targets.size(0)
             correct += predicted.eq(targets.data).cpu().sum()
-
-            progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                % (test_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
+            if args.progress_bar:
+                progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+                    % (test_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
 
         # Save checkpoint.
         acc = 100.*float(correct)/float(total)
