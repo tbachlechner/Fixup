@@ -34,7 +34,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', c
                         ' | '.join(model_names) + ' (default: fixup_resnet110)')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--sess', default='mixup_default', type=str, help='session id')
-parser.add_argument('--seed', default=0, type=int, help='rng seed')
+parser.add_argument('--seed', default=random.randint(0,10000), type=int, help='rng seed')
 parser.add_argument('--alpha', default=1., type=float, help='interpolation strength (uniform=1., ERM=0.)')
 parser.add_argument('--sgdr', action='store_true', help='use SGD with cosine annealing learning rate and restarts')
 parser.add_argument('--decay', default=1e-4, type=float, help='weight decay (default=1e-4)')
