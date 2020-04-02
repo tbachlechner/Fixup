@@ -48,7 +48,7 @@ class BasicBlock(nn.Module):
 class ResNet_v(nn.Module):
 
     def __init__(self, block, layers, num_classes=10):
-        super(ResNet, self).__init__()
+        super(ResNet_v, self).__init__()
         self.num_layers = sum(layers)
         self.inplanes = 16
         self.conv1 = conv3x3(3, 16)
