@@ -106,42 +106,42 @@ class ResNet_v(nn.Module):
         return x
 
 
-def resnet20_v(**kwargs):
+def resnet_v20(**kwargs):
     """Constructs a ResNet-20 model.
     """
     model = ResNet_v(BasicBlock, [3, 3, 3], **kwargs)
     return model
 
 
-def resnet32_v(**kwargs):
+def resnet_v32(**kwargs):
     """Constructs a ResNet-32 model.
     """
     model = ResNet_v(BasicBlock, [5, 5, 5], **kwargs)
     return model
 
 
-def resnet44_v(**kwargs):
+def resnet_v44(**kwargs):
     """Constructs a ResNet-44 model.
     """
     model = ResNet_v(BasicBlock, [7, 7, 7], **kwargs)
     return model
 
 
-def resnet56_v(**kwargs):
+def resnet_v56(**kwargs):
     """Constructs a ResNet-56 model.
     """
     model = ResNet_v(BasicBlock, [9, 9, 9], **kwargs)
     return model
 
 
-def resnet110_v(**kwargs):
+def resnet_v110(**kwargs):
     """Constructs a ResNet-110 model.
     """
     model = ResNet_v(BasicBlock, [18, 18, 18], **kwargs)
     return model
 
 
-def resnet1202_v(**kwargs):
+def resnet_v1202(**kwargs):
     """Constructs a ResNet-1202 model.
     """
     model = ResNet_v(BasicBlock, [200, 200, 200], **kwargs)
