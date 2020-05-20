@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-__all__ = ['PreActResNet','preactresnet18', 'preactresnet34', 'preactresnet50', 'preactresnet101','preactresnet152']
+__all__ = ['PreActResNet','preactresnet18', 'preactresnet34', 'preactresnet50', 'preactresnet101','preactresnet152','preactresnet1202']
 
 
 class PreActBlock(nn.Module):
@@ -112,6 +112,8 @@ def preactresnet101():
 def preactresnet152():
     return PreActResNet(PreActBottleneck, [3,8,36,3])
 
+def preactresnet1202():
+    return PreActResNet(PreActBottleneck, [100,100,100,100])
 
 def test():
     net = PreActResNet18()
