@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-__all__ = ['PreActResNet','rezero_preactresnet18', 'rezero_preactresnet34', 'rezero_preactresnet50', 'rezero_preactresnet101','rezero_preactresnet152']
+__all__ = ['PreActResNet','rezero_preactresnet18', 'rezero_preactresnet34', 'rezero_preactresnet50', 'rezero_preactresnet101','rezero_preactresnet152','rezero_preactresnet1202']
 
 
 class rezero_PreActBlock(nn.Module):
@@ -112,6 +112,9 @@ def rezero_preactresnet101():
 
 def rezero_preactresnet152():
     return PreActResNet(rezero_PreActBottleneck, [3,8,36,3])
+
+def rezero_preactresnet1202():
+    return PreActResNet(rezero_PreActBottleneck, [100,100,100,100])
 
 
 def test():
