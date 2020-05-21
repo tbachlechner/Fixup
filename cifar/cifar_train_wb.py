@@ -14,7 +14,7 @@ import torchvision.transforms as transforms
 import os
 import argparse
 import csv
-
+import wandb
 import models
 
 #from utils import progress_bar, mixup_data, mixup_criterion
@@ -27,7 +27,7 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
-
+wandb.init(entity = tbachlechner, project = cifar_stepdown)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', choices=model_names, help='model architecture: ' +
@@ -107,6 +107,8 @@ else:
     print("=> creating model '{}'".format(args.arch))
     net = models.__dict__[args.arch]()
 
+wandb.watch(net)
+    
 result_folder = './results/'
 if not os.path.exists(result_folder):
     os.makedirs(result_folder)
@@ -252,3 +254,4 @@ for epoch in range(start_epoch, args.n_epoch):
     with open(logname, 'a') as logfile:
         logwriter = csv.writer(logfile, delimiter=',')
         logwriter.writerow([epoch, lr, train_loss, train_acc, test_loss, test_acc])
+        wandb.log({'epoch': epoch, 'lr':lr , 'train_loss':train_loss, 'train_acc':train_acc, 'test_loss':test_loss, 'test_acc':test_acc})
