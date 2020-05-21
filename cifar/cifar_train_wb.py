@@ -35,7 +35,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', c
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--sess', default='mixup_default', type=str, help='session id')
 parser.add_argument('--seed', default=random.randint(0,10000), type=int, help='rng seed')
-parser.add_argument('--alpha', default=1., type=float, help='interpolation strength (uniform=1., ERM=0.)')
+parser.add_argument('--alpha', default=0., type=float, help='interpolation strength (uniform=1., ERM=0.)')
 parser.add_argument('--sgdr', action='store_true', help='use SGD with cosine annealing learning rate and restarts')
 parser.add_argument('--decay', default=5e-4, type=float, help='weight decay (default=1e-4)')
 parser.add_argument('--batchsize', default=128, type=int, help='batch size per GPU (default=128)')
@@ -51,6 +51,8 @@ args.progress_bar = (args.progress_bar=='True')
 if args.progress_bar:
     from utils import progress_bar
 
+print(args)
+    
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
 numpy.random.seed(args.seed)
