@@ -27,7 +27,7 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
-wandb.init(entity = tbachlechner, project = cifar_stepdown)
+wandb.init(project = 'cifar_stepdown',  entity='tbachlechner', name = args.sess)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', choices=model_names, help='model architecture: ' +
