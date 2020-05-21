@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 
 
-__all__ = ['ResNet_v', 'resnet_v20', 'resnet_v32', 'resnet_v44', 'resnet_v56', 'resnet_v110', 'resnet_v1202']
+__all__ = ['ResNet_v0init', 'resnet_v0init20', 'resnet_v0init32', 'resnet_v0init44', 'resnet_v0init56', 'resnet_v0init110', 'resnet_v0init1202']
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -45,10 +45,10 @@ class BasicBlock(nn.Module):
         return out
 
 
-class ResNet_v(nn.Module):
+class ResNet_v0init(nn.Module):
 
     def __init__(self, block, layers, num_classes=10):
-        super(ResNet_v, self).__init__()
+        super(ResNet_v0init, self).__init__()
         self.num_layers = sum(layers)
         self.inplanes = 16
         self.conv1 = conv3x3(3, 16)
@@ -70,9 +70,9 @@ class ResNet_v(nn.Module):
         # Zero-initialize the last BN in each residual branch,
         # so that the residual branch starts with zeros, and each residual block behaves like an identity.
         # This improves the model by 0.2~0.3% according to https://arxiv.org/abs/1706.02677
-        #for m in self.modules():
-        #    if isinstance(m, BasicBlock):
-        #        nn.init.constant_(m.bn2.weight, 0)
+        for m in self.modules():
+            if isinstance(m, BasicBlock):
+                nn.init.constant_(m.bn2.weight, 0)
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -106,43 +106,43 @@ class ResNet_v(nn.Module):
         return x
 
 
-def resnet_v20(**kwargs):
+def resnet_v0init20(**kwargs):
     """Constructs a ResNet-20 model.
     """
-    model = ResNet_v(BasicBlock, [3, 3, 3], **kwargs)
+    model = ResNet_v0init(BasicBlock, [3, 3, 3], **kwargs)
     return model
 
 
-def resnet_v32(**kwargs):
+def resnet_v0init32(**kwargs):
     """Constructs a ResNet-32 model.
     """
-    model = ResNet_v(BasicBlock, [5, 5, 5], **kwargs)
+    model = ResNet_v0init(BasicBlock, [5, 5, 5], **kwargs)
     return model
 
 
-def resnet_v44(**kwargs):
+def resnet_v0init44(**kwargs):
     """Constructs a ResNet-44 model.
     """
-    model = ResNet_v(BasicBlock, [7, 7, 7], **kwargs)
+    model = ResNet_v0init(BasicBlock, [7, 7, 7], **kwargs)
     return model
 
 
-def resnet_v56(**kwargs):
+def resnet_v0init56(**kwargs):
     """Constructs a ResNet-56 model.
     """
-    model = ResNet_v(BasicBlock, [9, 9, 9], **kwargs)
+    model = ResNet_v0init(BasicBlock, [9, 9, 9], **kwargs)
     return model
 
 
-def resnet_v110(**kwargs):
+def resnet_v0init110(**kwargs):
     """Constructs a ResNet-110 model.
     """
-    model = ResNet_v(BasicBlock, [18, 18, 18], **kwargs)
+    model = ResNet_v0init(BasicBlock, [18, 18, 18], **kwargs)
     return model
 
 
-def resnet_v1202(**kwargs):
+def resnet_v0init1202(**kwargs):
     """Constructs a ResNet-1202 model.
     """
-    model = ResNet_v(BasicBlock, [200, 200, 200], **kwargs)
+    model = ResNet_v0init(BasicBlock, [200, 200, 200], **kwargs)
     return model    
