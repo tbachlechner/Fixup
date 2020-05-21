@@ -47,7 +47,7 @@ parser.add_argument('--progress_bar', default='True', type=str, help='display pr
 
 args = parser.parse_args()
 args.progress_bar = (args.progress_bar=='True')
-wandb.init(project = 'cifar_stepdown',  entity='tbachlechner', name = args.sess)
+wandb.init(project = 'cifar_stepdown',  entity='tbachlechner', name = args.sess+'_'+str(seed))
 if args.progress_bar:
     from utils import progress_bar
 
