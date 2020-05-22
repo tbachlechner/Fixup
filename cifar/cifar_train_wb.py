@@ -33,7 +33,7 @@ parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='fixup_resnet110', choices=model_names, help='model architecture: ' +
                         ' | '.join(model_names) + ' (default: fixup_resnet110)')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
-parser.add_argument('--sess', default='mixup_default', type=str, help='session id')
+parser.add_argument('--sess', default='', type=str, help='session id')
 parser.add_argument('--seed', default=random.randint(0,10000), type=int, help='rng seed')
 parser.add_argument('--alpha', default=0., type=float, help='interpolation strength (uniform=1., ERM=0.)')
 parser.add_argument('--sgdr', action='store_true', help='use SGD with cosine annealing learning rate and restarts')
@@ -47,8 +47,10 @@ parser.add_argument('--progress_bar', default='False', type=str, help='display p
 parser.add_argument('--warmup',  action='store_true', help='one epoch warmup with lr 0.01')
 
 args = parser.parse_args()
-args.progress_bar = (args.progress_bar=='True')
+args.sess=args.arch
 wandb.init(project = 'cifar_stepdown',  entity='tbachlechner', name = args.sess+'_'+str(args.seed))
+
+args.progress_bar = (args.progress_bar=='True')
 if args.progress_bar:
     from utils import progress_bar
 
