@@ -44,6 +44,7 @@ parser.add_argument('--base_lr', default=0.1, type=float, help='base learning ra
 parser.add_argument('--lr_step1', default=100, type=int, help='first lr step')
 parser.add_argument('--lr_step2', default=150, type=int, help='second lr step')
 parser.add_argument('--progress_bar', default='True', type=str, help='display progress bar')
+parser.add_argument('--warmup',  action='store_true', help='one epoch warmup with lr 0.01')
 
 args = parser.parse_args()
 args.progress_bar = (args.progress_bar=='True')
@@ -52,7 +53,7 @@ if args.progress_bar:
     from utils import progress_bar
 
 print(args)
-    
+
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
 numpy.random.seed(args.seed)
@@ -110,7 +111,7 @@ else:
     net = models.__dict__[args.arch]()
 
 wandb.watch(net)
-    
+
 result_folder = './results/'
 if not os.path.exists(result_folder):
     os.makedirs(result_folder)
@@ -162,7 +163,7 @@ def train(epoch):
         total += targets.size(0)
         correct += (lam * predicted.eq(targets_a.data).float()).cpu().sum() + ((1 - lam) * predicted.eq(targets_b.data).float()).cpu().sum()
         acc = 100.*float(correct)/float(total)
-        
+
         if args.progress_bar:
             progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                 % (train_loss/(batch_idx+1), acc, correct, total))
@@ -214,9 +215,9 @@ def checkpoint(acc, epoch):
 def adjust_learning_rate(optimizer, epoch):
     """decrease the learning rate at args.lr_step1 and args.lr_step2 epoch"""
     lr = base_learning_rate
-    if epoch <= 9 and lr > 0.1:
+    if args.warmup and epoch == 0:
         # warm-up training for large minibatch
-        lr = 0.1 + (base_learning_rate - 0.1) * epoch / 10.
+        lr = 0.01
     if epoch >= args.lr_step1:
         lr /= 10
     if epoch >= args.lr_step2:
