@@ -43,7 +43,7 @@ parser.add_argument('--n_epoch', default=200, type=int, help='total number of ep
 parser.add_argument('--base_lr', default=0.1, type=float, help='base learning rate (default=0.1)')
 parser.add_argument('--lr_step1', default=100, type=int, help='first lr step')
 parser.add_argument('--lr_step2', default=150, type=int, help='second lr step')
-parser.add_argument('--progress_bar', default='True', type=str, help='display progress bar')
+parser.add_argument('--progress_bar', default='False', type=str, help='display progress bar')
 parser.add_argument('--warmup',  action='store_true', help='one epoch warmup with lr 0.01')
 
 args = parser.parse_args()
