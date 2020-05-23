@@ -7,3 +7,4 @@ from .rezero_resnet_cifar import *
 #from .dpn import *
 from .rezero_preact_resnet import *
 from .preact_resnet import *
+from .resnext import *
